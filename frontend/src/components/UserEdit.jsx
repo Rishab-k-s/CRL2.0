@@ -52,22 +52,22 @@ const UserEdit = () => {
     };
 
     return (
-        <Container>
-            <Box component="form" onSubmit={handleSubmit} sx={{ '& .MuiTextField-root': { m: 1 } }}>
-                <TextField label="Name" name="username" value={user.username} onChange={handleChange} fullWidth required />
-                <TextField label="Email" name="email" type="email" value={user.email} onChange={handleChange} fullWidth required />
-                <FormControl fullWidth>
+        <Container sx={{pt: 20}}>
+            <Box component="form" onSubmit={handleSubmit}>
+                <TextField label="Name" name="username" value={user.username} onChange={handleChange} fullWidth required sx={{ m: 2 }}/>
+                <TextField label="Email" name="email" type="email" value={user.email} onChange={handleChange} fullWidth required sx={{ m: 2 }}/>
+                <FormControl fullWidth sx={{ m: 2 }}>
                     <InputLabel>Role</InputLabel>
                     <Select name="role" value={user.role} onChange={handleChange} required>
                         <MenuItem value="instructor">Instructor</MenuItem>
                         <MenuItem value="admin">Admin</MenuItem>
-                        {/* <MenuItem value="moderator">Moderator</MenuItem> */}
+                        <MenuItem value="student">Student</MenuItem>
                     </Select>
                 </FormControl>
                 {!userId && (
-                    <TextField label="Password" name="password" type="password" value={user.password} onChange={handleChange} fullWidth required />
+                    <TextField label="Password" name="password" type="password" value={user.password} onChange={handleChange} fullWidth required sx={{ m: 2 }}/>
                 )}
-                <Button type="submit" color="primary" variant="contained" fullWidth>{userId ? 'Update User' : 'Create User'}</Button>
+                <Button type="submit" color="primary" variant="contained" sx={{ m: 2 }}>{userId ? 'Update User' : 'Create User'}</Button>
             </Box>
         </Container>
     );

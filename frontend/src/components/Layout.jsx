@@ -13,7 +13,7 @@ const Layout = ({ handleDrawerOpen }) => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <AppBar position="fixed" sx={{ bgcolor: 'black', boxShadow: 'none' }}>
-        <Toolbar sx={{ justifyContent: 'space-between', maxWidth: 'lg', width: '100%', mx: 'auto' }}>
+        <Toolbar sx={{ justifyContent: 'space-between', maxWidth: 'xl', width: '100%', mx: 'auto' }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <IconButton
                     color="inherit"
@@ -31,7 +31,7 @@ const Layout = ({ handleDrawerOpen }) => {
                         fontWeight: 500
                     }}
                 >
-                    CAMS Resource Library
+                    CRL 2.0
                 </Typography>
             </Box>
             <Box>

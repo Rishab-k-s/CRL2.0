@@ -122,7 +122,7 @@ function AuthForm() {
                                 }}
                             />
                         )}
-                        
+                        {!isLogin && (
                         <FormControl fullWidth margin="normal">
                         <InputLabel id="role-label">Role</InputLabel>
                         <Select
@@ -138,6 +138,7 @@ function AuthForm() {
                             <MenuItem value="admin">Admin</MenuItem>
                         </Select>
                         </FormControl>
+                        )}
 
                         <TextField
                             margin="normal"
