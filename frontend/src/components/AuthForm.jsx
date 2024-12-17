@@ -2,107 +2,143 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
-import { TextField, Button, Typography, Container, Tab, Tabs, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-import backgroundImage from '../assets/image.png'; // Replace with the path to your image
+import { 
+  TextField, 
+  Button, 
+  Typography, 
+  Container, 
+  Box, 
+  FormControl, 
+  Select, 
+  MenuItem,
+  Link,
+  InputLabel
+} from '@mui/material';
+import { School } from '@mui/icons-material';
 import purdueLogo from '../assets/download.png';
 
 function AuthForm() {
-    const { user } = useAuth(); // Retrieve the user object from AuthContext
-
+    const { user } = useAuth();
     const [isLogin, setIsLogin] = useState(true);
     const [formData, setFormData] = useState({
         username: '',
         email: '',
         password: '',
-        role: 'instructor'  // Default role set to 'instructor'
+        role: 'instructor'
     });
     const { login } = useAuth();
     const navigate = useNavigate();
+
+    const toggleAuthMode = (e) => {
+        e.preventDefault();  // Prevent form submission
+        setIsLogin(!isLogin);
+    };
+
+    useEffect(() => {
+        if (user) {
+            navigate('/courses');
+        }
+    }, [user, navigate]);
 
     const handleChange = (event) => {
         setFormData({ ...formData, [event.target.name]: event.target.value });
     };
 
-    // Redirect if already logged in
-    useEffect(() => {
-        if (user) {
-            navigate('/courses'); // or another route based on user role
-        }
-    }, [user, navigate]);
     const handleSubmit = async (event) => {
         event.preventDefault();
+        console.log('Form submitted:', formData);  // Debug log
+        
         const endpoint = isLogin ? 'login' : 'signup';
         try {
             const response = await axios.post(`http://localhost:8000/api/users/${endpoint}`, formData);
+            console.log('Response:', response.data);  // Debug log
+            
             login(response.data.token, response.data.role, response.data.username);
-            // Direct users based on their role
-            if (response.data.role === "admin") {
-                navigate('/courses');
-            } else if (response.data.role === "instructor") {
-                navigate('/courses');
-            } else {
-                navigate('/'); // Default route if role is undefined or unexpected
-            }
+            navigate('/courses');
         } catch (error) {
             console.error('Authentication failed:', error);
-            alert(error.response.data.message); // Display backend error message
+            if (error.response?.data?.message) {
+                alert(error.response.data.message);
+            } else {
+                alert('An error occurred during authentication');
+            }
         }
     };
 
     return (
-        <div >
-            <Container component="main" maxWidth="xs">
-                <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <img src={purdueLogo} alt="Purdue University Logo" style={{ width: '100px', height: '100px' }} />
-                    <Typography component="h1" variant="h5" style={{ fontWeight: 'bold', fontSize: '40px' }}>
-    Purdue University
-</Typography>
+        <Box
+            sx={{
+                minHeight: '100vh',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                bgcolor: '#f5f5f5'
+            }}
+        >
+            <Container maxWidth="sm">
+                <Box
+                    sx={{
+                        bgcolor: 'white',
+                        borderRadius: 2,
+                        p: 4,
+                        boxShadow: '0 2px 10px rgba(0,0,0,0.08)',
+                        textAlign: 'center'
+                    }}
+                >
+                    <Box sx={{ mb: 4 }}>
+                        <School sx={{ fontSize: 40, color: '#F4B41A', mb: 2 }} />
+                        <Typography 
+                            variant="h4" 
+                            sx={{ 
+                                fontWeight: 500,
+                                mb: 1
+                            }}
+                        >
+                            {isLogin ? 'Welcome Back' : 'Create your account'}
+                        </Typography>
+                        <Typography 
+                            color="text.secondary"
+                            sx={{ mb: 4 }}
+                        >
+                            {isLogin ? 'Sign in to access your account' : 'Join our learning community today'}
+                        </Typography>
+                    </Box>
 
-
-                    <Typography component="h1" variant="h5" style={{ color: '#cfb991', fontWeight: 'bold', textShadow: '2px 2px #000' }}>
-                        Fort Wayne
-                    </Typography>
-                    <Typography component="h1" variant="h5" style={{ fontWeight: 'bold', fontSize: '60px' }}>
-    CAMS
-</Typography>
-                    <Tabs value={isLogin ? 0 : 1} onChange={() => setIsLogin(!isLogin)} aria-label="Login or Register">
-                        <Tab label="Login" />
-                        <Tab label="Register" />
-                    </Tabs>
-                    <Typography component="h1" variant="h5">
-                        {isLogin ? 'Login' : 'Register'}
-                    </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                    <Box component="form" onSubmit={handleSubmit} noValidate>
                         {!isLogin && (
-                            <>
-                                <TextField
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    id="username"
-                                    label="Name"
-                                    name="username"
-                                    autoComplete="username"
-                                    autoFocus
-                                    value={formData.username}
-                                    onChange={handleChange}
-                                />
-                            </>
-                        )}
-                        <FormControl fullWidth margin="normal">
-                            <InputLabel id="role-label">Role</InputLabel>
-                            <Select
-                                labelId="role-label"
-                                id="role"
-                                name="role"
-                                value={formData.role}
-                                label="Role"
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="username"
+                                label="Name"
+                                name="username"
+                                autoComplete="username"
+                                value={formData.username}
                                 onChange={handleChange}
-                            >
-                                <MenuItem value="instructor">Instructor</MenuItem>
-                                <MenuItem value="admin">Admin</MenuItem>
-                            </Select>
+                                sx={{ mb: 2 }}
+                                InputProps={{
+                                    sx: { borderRadius: 1 }
+                                }}
+                            />
+                        )}
+                        
+                        <FormControl fullWidth margin="normal">
+                        <InputLabel id="role-label">Role</InputLabel>
+                        <Select
+                            labelId="role-label"
+                            id="role"
+                            name="role"
+                            value={formData.role}
+                            label="Role"
+                            onChange={handleChange}
+                        >
+                            <MenuItem value="student">Student</MenuItem>
+                            <MenuItem value="instructor">Instructor</MenuItem>
+                            <MenuItem value="admin">Admin</MenuItem>
+                        </Select>
                         </FormControl>
+
                         <TextField
                             margin="normal"
                             required
@@ -113,7 +149,12 @@ function AuthForm() {
                             autoComplete="email"
                             value={formData.email}
                             onChange={handleChange}
+                            sx={{ mb: 2 }}
+                            InputProps={{
+                                sx: { borderRadius: 1 }
+                            }}
                         />
+
                         <TextField
                             margin="normal"
                             required
@@ -125,19 +166,52 @@ function AuthForm() {
                             autoComplete="current-password"
                             value={formData.password}
                             onChange={handleChange}
+                            sx={{ mb: 3 }}
+                            InputProps={{
+                                sx: { borderRadius: 1 }
+                            }}
                         />
+
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
+                            sx={{
+                                mt: 2,
+                                mb: 3,
+                                py: 1.5,
+                                bgcolor: '#F4B41A',
+                                '&:hover': { bgcolor: '#d49b15' },
+                                borderRadius: 1,
+                                textTransform: 'none'
+                            }}
                         >
-                            {isLogin ? 'Login' : 'Register'}
+                            {isLogin ? 'Login' : 'Create Account'}
                         </Button>
+
+                        <Box sx={{ textAlign: 'center' }}>
+                            <Typography color="text.secondary">
+                                {isLogin ? "Don't have an account? " : "Already have an account? "}
+                                <Link
+                                    component="span"  // Changed from "button" to "span"
+                                    onClick={toggleAuthMode}
+                                    sx={{ 
+                                        color: '#F4B41A',
+                                        textDecoration: 'none',
+                                        cursor: 'pointer',
+                                        '&:hover': {
+                                            textDecoration: 'underline'
+                                        }
+                                    }}
+                                >
+                                    {isLogin ? 'Create New Account' : 'Sign In'}
+                                </Link>
+                            </Typography>
+                        </Box>
                     </Box>
                 </Box>
             </Container>
-        </div>
+        </Box>
     );
 }
 

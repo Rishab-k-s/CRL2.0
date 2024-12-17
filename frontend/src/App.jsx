@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Box, CssBaseline, Toolbar, Drawer } from '@mui/material';
+import { Box, CssBaseline, Drawer } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import AuthForm from "./components/AuthForm";
@@ -19,6 +19,10 @@ import CourseDetail from './components/CourseDetail';
 import UserList from './components/UserList';
 import UserEdit from './components/UserEdit';
 import PrivateRoute from './components/PrivateRoute';
+import AdminRoute from './components/AdminRoute';
+import Layout from './components/Layout';
+import LibraryPage from './components/LibraryPage';
+import BookForm from './components/BookForm';
 
 const drawerWidth = 240;
 
@@ -53,28 +57,31 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <CssBaseline />
-        <Sidebar open={open} onOpen={handleDrawerOpen} onClose={handleDrawerClose} />
-        <Main open={open}>
-          <Toolbar />
+        <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+          <CssBaseline />
+          <Sidebar open={open} onOpen={handleDrawerOpen} onClose={handleDrawerClose} />
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<AuthForm />} />
-            {/* <Route path="/dashboard" element={<Dashboard />} /> */}
-            <Route path="/admin/users" element={<UserManagement />} />
-            <Route path="/courses" element={<PrivateRoute><CoursesPage /></PrivateRoute>} />
-            <Route path="/courses/create" element={<PrivateRoute><CourseEdit /></PrivateRoute>} />
-            <Route path="/courses/edit/:courseId" element={<PrivateRoute><CourseEdit /></PrivateRoute>} />
-            <Route path="/courses/:courseId" element={<PrivateRoute><CourseDetail /></PrivateRoute>} />
-            <Route path="/courses/:courseId/outcome" element={<PrivateRoute><CourseDetail /></PrivateRoute>} />
-            <Route path="/assessments" element={<AssessmentManagement />} />
-            <Route path="/grades" element={<GradeManagement />} />
-            <Route path="/users/" element={<PrivateRoute><UserList /></PrivateRoute>} />
-            <Route path="/users/create" element={<PrivateRoute><UserEdit /></PrivateRoute>} />
-            <Route path="/users/edit/:userId" element={<UserEdit />} />
-            <Route path="*" element={<NotFound />} />
+            <Route element={<Layout handleDrawerOpen={handleDrawerOpen} />}>
+              <Route path="/" element={<Home drawerOpen={open} handleDrawerOpen={handleDrawerOpen} />} />
+              <Route path="/admin/users" element={<UserManagement />} />
+              <Route path="/courses" element={<PrivateRoute><CoursesPage /></PrivateRoute>} />
+              <Route path="/courses/create" element={<PrivateRoute><CourseEdit /></PrivateRoute>} />
+              <Route path="/courses/edit/:courseId" element={<PrivateRoute><CourseEdit /></PrivateRoute>} />
+              <Route path="/courses/:courseId" element={<PrivateRoute><CourseDetail /></PrivateRoute>} />
+              <Route path="/courses/:courseId/outcome" element={<PrivateRoute><CourseDetail /></PrivateRoute>} />
+              <Route path="/assessments" element={<AssessmentManagement />} />
+              <Route path="/grades" element={<GradeManagement />} />
+              <Route path="/users/" element={<PrivateRoute><UserList /></PrivateRoute>} />
+              <Route path="/users/create" element={<PrivateRoute><UserEdit /></PrivateRoute>} />
+              <Route path="/users/edit/:userId" element={<UserEdit />} />
+              <Route path="/library" element={<PrivateRoute><LibraryPage /></PrivateRoute>} />
+              <Route path="/library/add" element={<PrivateRoute><BookForm /></PrivateRoute>} />
+              <Route path="/library/edit/:id" element={<PrivateRoute><BookForm /></PrivateRoute>} />
+              </Route>
+              <Route path="/login" element={<AuthForm />} />
+              <Route path="*" element={<NotFound />} />
           </Routes>
-        </Main>
+        </Box>
       </BrowserRouter>
     </AuthProvider>
   );

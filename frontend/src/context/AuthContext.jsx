@@ -6,32 +6,37 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userRole, setUserRole] = useState(null);
-    const [username, setUsername] = useState("");  // Store username
-    const [loading, setLoading] = useState(true);  // Indicates if the auth data is still loading
-    const [user, setUser] = useState(null);
+    const [username, setUsername] = useState("");
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        // Add console.log to debug initial load
+        console.log('Loading auth state from localStorage');
+        
         const token = localStorage.getItem('token');
         const role = localStorage.getItem('role');
-        const storedUsername = localStorage.getItem('username');  // Get username from localStorage
+        const storedUsername = localStorage.getItem('username');
+
+        console.log('Retrieved from localStorage:', { token: !!token, role, username: storedUsername });
 
         if (token && role) {
             setIsAuthenticated(true);
             setUserRole(role);
-            setUsername(storedUsername);  // Set the username in state
-
-            setUser({ token }); // Simplified, you might want to store more user details
+            setUsername(storedUsername);
         }
-        setLoading(false);  // Set loading to false after checking local storage
+        setLoading(false);
     }, []);
 
     const login = (token, role, username) => {
+        console.log('Login called with:', { token: !!token, role, username });
+        
         localStorage.setItem('token', token);
         localStorage.setItem('role', role);
-        localStorage.setItem('username', username);  // Store username in localStorage
+        localStorage.setItem('username', username);
+        
         setIsAuthenticated(true);
         setUserRole(role);
-        setUsername(username);  // Update username in state
+        setUsername(username);
     };
 
     const logout = () => {

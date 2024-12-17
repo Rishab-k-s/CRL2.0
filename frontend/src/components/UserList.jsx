@@ -42,7 +42,7 @@ const UserList = () => {
     };
 
     return (
-        <Box sx={{ mt: 4, mx: 2 }}>
+        <Box sx={{ mt: 4, mx: 2, pt: '64px' }}>
             <Typography variant="h4" sx={{ mb: 2 }}>
                 User Management
             </Typography>

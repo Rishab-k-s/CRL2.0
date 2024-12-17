@@ -2,10 +2,9 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardActionArea, CardContent, Typography, CardActions, Button } from '@mui/material';
 
-function CourseCard({ course, onDelete, onEdit }) {
+function CourseCard({ course, onDelete, onEdit, isAdmin }) { // Add isAdmin prop
     const navigate = useNavigate();
 
-    // Function to handle navigation to course detail
     const handleNavigateToDetail = () => {
         navigate(`/courses/${course._id}`);
     };
@@ -22,14 +21,16 @@ function CourseCard({ course, onDelete, onEdit }) {
                     </Typography>
                 </CardContent>
             </CardActionArea>
-            <CardActions>
-                <Button size="small" color="primary" onClick={() => onEdit(course._id)}>
-                    Edit
-                </Button>
-                <Button size="small" color="secondary" onClick={() => onDelete(course._id)}>
-                    Delete
-                </Button>
-            </CardActions>
+            {isAdmin && ( // Only show actions for admin users
+                <CardActions>
+                    <Button size="small" color="primary" onClick={() => onEdit(course._id)}>
+                        Edit
+                    </Button>
+                    <Button size="small" color="secondary" onClick={() => onDelete(course._id)}>
+                        Delete
+                    </Button>
+                </CardActions>
+            )}
         </Card>
     );
 }
